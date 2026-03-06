@@ -50,11 +50,11 @@ export default function RootLayout({
     if (navigator.onLine) {
       setOnline('', true)
     } else {
-      setOnline("Sorry, you're now offline", false)
+      setOnline("Sorry, you're now offline.", false)
     }
 
     const updateStatusOnline = () => {
-      setOnline("Cool! You're now back online", true)
+      setOnline("Cool! You're now back online.", true)
     }
 
     const updateStatusOffline = () => {
