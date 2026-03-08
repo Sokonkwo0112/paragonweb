@@ -238,14 +238,14 @@ const ConsumptionForm: React.FC = () => {
             </div>
             <div className="flex flex-col">
               <label className="label" htmlFor="">
-                Feed
+                Consumption Product
               </label>
               <div className="relative">
                 <div
                   onClick={() => toggleFeed((e) => !e)}
                   className="form-input cursor-pointer"
                 >
-                  {consumptionForm.feed ? consumptionForm.feed : 'Select Feed'}
+                  {consumptionForm.feed ? consumptionForm.feed : 'Select Consumption'}
                   <i
                     className={`bi bi-caret-down-fill ml-auto ${isFeed ? 'active' : ''
                       }`}

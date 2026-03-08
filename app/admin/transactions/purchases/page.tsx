@@ -42,6 +42,7 @@ const PurchaseTransactions: React.FC = () => {
   }
   const [fromDate, setFromDate] = useState<Date>(defaultFrom)
   const [toDate, setToDate] = useState<Date>(defaultTo)
+    const [sum, setSum] = useState(0)
   const url = `/transactions?dateFrom=${fromDate}&dateTo=${toDate}`
 
   useEffect(() => {
@@ -52,6 +53,11 @@ const PurchaseTransactions: React.FC = () => {
       getTransactions(`${url}${params}`, setMessage)
     }
   }, [page, toDate, fromDate])
+
+   useEffect(() => {
+    const total = transactions.reduce((sum, item) => sum + item.totalAmount, 0);
+    setSum(total)
+  }, [transactions])
 
   const startDeleteTransactions = async () => {
     if (selectedTransactions.length === 0) {
@@ -193,12 +199,10 @@ const PurchaseTransactions: React.FC = () => {
             <i className="bi bi-trash"></i>
           </div>
           <div className="ml-auto flex items-center">
-            <div className="text-[var(--success)] mr-3">
-              ₦{formatMoney(summary.totalProfit)}
+            <div className="text-[var(--customRedColor)] mr-3">
+              ₦{formatMoney(sum)}
             </div>
-            <div className="text-[var(--customRedColor)]">
-              ₦{formatMoney(summary.totalLoss)}
-            </div>
+            
           </div>
         </div>
       </div>

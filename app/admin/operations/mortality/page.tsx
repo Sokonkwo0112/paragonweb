@@ -12,19 +12,18 @@ import {
 } from '@/lib/helpers'
 import StatDuration from '@/components/Admin/StatDuration'
 
-const DailyProductions: React.FC = () => {
+const DailyMotality: React.FC = () => {
   const [page_size] = useState(20)
   const [sort] = useState('-createdAt')
   const { setMessage } = MessageStore()
   const {
-    productStockings,
+    mortalities,
     loading,
     count,
-    summary,
     deleteItem,
     reshuffleResults,
     toggleActive,
-    getProductStockings,
+    getMortalities,
   } = StockingStore()
   const pathname = usePathname()
   const { page } = useParams()
@@ -60,23 +59,29 @@ const DailyProductions: React.FC = () => {
 
   const [fromDate, setFromDate] = useState<Date>(defaultFrom)
   const [toDate, setToDate] = useState<Date>(defaultTo)
-  const url = `/products/stocking/?dateFrom=${fromDate}&dateTo=${toDate}&isProfit=true`
+  const [sum, setSum] = useState(0)
+  const url = `/products/stocking`
+const params = `/?dateFrom=${fromDate}&dateTo=${toDate}&page_size=${page_size}&page=${page ? page : 1
+      }&ordering=${sort}&isProfit=false`
 
   useEffect(() => {
     reshuffleResults()
   }, [pathname])
 
   useEffect(() => {
-    const params = `&page_size=${page_size}&page=${page ? page : 1
-      }&ordering=${sort}&isProfit=true`
-    getProductStockings(`${url}${params}`, setMessage)
+    const total = mortalities.reduce((sum, item) => sum + item.amount, 0);
+    setSum(total)
+  }, [mortalities])
+
+  useEffect(() => {
+    getMortalities(`${url}${params}`)
   }, [page, toDate, fromDate])
 
   const deleteProductStock = async (id: string, index: number) => {
     toggleActive(index)
     const params = `?page_size=${page_size}&page=${page ? page : 1
-      }&ordering=${sort}&isProfit=true`
-    await deleteItem(`/products/stocking/${id}/${params}`, setMessage)
+      }&ordering=${sort}`
+    await deleteItem(`${url}/${id}/${params}`, setMessage)
   }
 
   const startDelete = (id: string, index: number) => {
@@ -91,7 +96,7 @@ const DailyProductions: React.FC = () => {
   return (
     <>
       <StatDuration
-        title="Daily Production Records"
+        title="Daily Mortality Records"
         fromDate={fromDate}
         toDate={toDate}
         setFromDate={setFromDate}
@@ -99,7 +104,7 @@ const DailyProductions: React.FC = () => {
       />
 
       <div className="overflow-auto mb-5">
-        {productStockings.length > 0 ? (
+        {mortalities.length > 0 ? (
           <table>
             <thead>
               <tr className="bg-[var(--primary)] p-2">
@@ -107,13 +112,12 @@ const DailyProductions: React.FC = () => {
                 <th>Product</th>
                 <th>Staff</th>
                 <th>Quantity</th>
-                <th>Percentage</th>
                 <th>Amount</th>
                 <th>Time</th>
               </tr>
             </thead>
             <tbody>
-              {productStockings.map((item, index) => (
+              {mortalities.map((item, index) => (
                 <tr
                   key={index}
                   className={` ${index % 2 === 1 ? 'bg-[var(--primary)]' : ''}`}
@@ -156,7 +160,6 @@ const DailyProductions: React.FC = () => {
                   >
                     {item.units}
                   </td>
-                  <td>{item.percentageProduction ? `${(item.percentageProduction*100).toFixed(2)}%`: "N/A"}</td>
                   <td
                     className={`${item.isProfit
                       ? 'text-[var(--success)]'
@@ -196,8 +199,8 @@ const DailyProductions: React.FC = () => {
       <div className="card_body sharp mb-3">
         <div className="flex flex-wrap items-center">
           <div className="ml-auto flex items-center">
-            <div className="text-[var(--success)] mr-3">
-              ₦{formatMoney(summary.totalProfit)}
+            <div className="text-[var(--customRedColor)]">
+              ₦{formatMoney(sum)}
             </div>
           </div>
         </div>
@@ -210,4 +213,4 @@ const DailyProductions: React.FC = () => {
   )
 }
 
-export default DailyProductions
+export default DailyMotality

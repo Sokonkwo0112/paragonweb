@@ -1,11 +1,13 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { appendForm } from '@/lib/helpers'
 import { AlartStore, MessageStore } from '@/src/zustand/notification/Message'
 import { validateInputs } from '@/lib/validation'
 import { AuthStore } from '@/src/zustand/user/AuthStore'
 import StockingStore from '@/src/zustand/Stocking'
+import ProductStore, { Product } from '@/src/zustand/Product'
+import { ProductEmpty } from '@/src/zustand/Transaction'
 
 const StockingForm: React.FC = () => {
   const {
@@ -18,6 +20,8 @@ const StockingForm: React.FC = () => {
     setShowStocking,
   } = StockingStore()
   const { setMessage } = MessageStore()
+    const { products, productForm } = ProductStore()
+      const [isBird, toggleBird] = useState(false)
   const pathname = usePathname()
   const { setAlert } = AlartStore()
   const { user } = AuthStore()
@@ -26,6 +30,11 @@ const StockingForm: React.FC = () => {
   useEffect(() => {
     reshuffleResults()
   }, [pathname])
+
+  const selectFeed = (p: Product) => {
+    ProductStore.setState({productForm:p})
+    toggleBird(false)
+  }
 
   const handleFileChange =
     (key: keyof typeof stockingFrom) =>
@@ -74,6 +83,12 @@ const StockingForm: React.FC = () => {
       {
         name: 'productId',
         value: stockingFrom.productId,
+        rules: { blank: true, maxLength: 100 },
+        field: 'Name field',
+      },
+      {
+        name: 'parentProductId',
+        value: productForm._id,
         rules: { blank: true, maxLength: 100 },
         field: 'Name field',
       },
@@ -144,7 +159,10 @@ const StockingForm: React.FC = () => {
             () => setShowStocking(false)
           )
           : postStocking(`${url}/?ordering=-createdAt`, data, setMessage, () =>
+          {
             setShowStocking(false)
+            ProductStore.setState({productForm:ProductEmpty})
+          }
           )
     )
   }
@@ -176,6 +194,36 @@ const StockingForm: React.FC = () => {
                 type="number"
                 placeholder="Enter units"
               />
+            </div>
+            <div className="flex flex-col">
+              <label className="label" htmlFor="">
+                Select Product
+              </label>
+              <div className="relative">
+                <div
+                  onClick={() => toggleBird((e) => !e)}
+                  className="form-input cursor-pointer"
+                >
+                  {productForm._id ? productForm.name : 'Select Product'}
+                  <i
+                    className={`bi bi-caret-down-fill ml-auto ${isBird ? 'active' : ''
+                      }`}
+                  ></i>
+                </div>
+                {isBird && (
+                  <div className="dropdownList">
+                    {products.map((item, index) => (
+                      <div
+                        onClick={() => selectFeed(item)}
+                        key={index}
+                        className="p-3 cursor-pointer border-b border-b-[var(--border)]"
+                      >
+                        {item.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             {stockingFrom._id && (
               <div className="flex flex-col">

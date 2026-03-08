@@ -40,6 +40,7 @@ export function ProductStocksCard() {
                     <thead>
                         <tr className="text-left border-b border-b-[var(--border)]">
                             <th>Product</th>
+                            <th>Percentage</th>
                             <th className="text-right">Stock</th>
                         </tr>
                     </thead>
@@ -50,6 +51,7 @@ export function ProductStocksCard() {
                                 className="border-b border-b-[var(--border)] last:border-none"
                             >
                                 <td className="py-2">{item.name}</td>
+                                <td className="text-[var(--success)]">{item.percentageProduction ? `${(item.percentageProduction*100).toFixed(2)}%`: "N/A"}</td>
                                 <td className="text-right font-medium">{formatMoney(item.units)} {item.purchaseUnit}</td>
                             </tr>
                         ))}

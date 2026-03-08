@@ -71,6 +71,7 @@ export interface Product {
   discount: number
   cartUnits: number
   unitPerPurchase: number
+  percentageProduction: number
   units: number
   costPrice: number
   price: number
@@ -93,6 +94,7 @@ export const ProductEmpty = {
   purchaseUnit: '',
   remark: '',
   discount: 0,
+  percentageProduction: 0,
   units: 0,
   unitPerPurchase: 1,
   consumptionUnit: '',

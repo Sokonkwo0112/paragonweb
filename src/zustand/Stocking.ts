@@ -29,6 +29,7 @@ export interface Stocking {
   productId: string
   video: string | File
   amount: number
+  percentageProduction: number
   isProfit: boolean
   createdAt: Date | null | number
   isChecked?: boolean
@@ -45,6 +46,7 @@ export const StockingEmpty = {
   productId: '',
   video: '',
   amount: 0,
+  percentageProduction: 0,
   isProfit: false,
   createdAt: null,
 }
@@ -61,6 +63,7 @@ interface ProductState {
   latestProductions: Stocking[]
   latestConsumptions: Stocking[]
   latestMotalities: Stocking[]
+  mortalities: Stocking[]
   loading: boolean
   showStocking: boolean
   selectedStockings: Stocking[]
@@ -88,6 +91,9 @@ interface ProductState {
     url: string,
   ) => Promise<void>
   getLatestMotalities: (
+    url: string,
+  ) => Promise<void>
+  getMortalities: (
     url: string,
   ) => Promise<void>
   getLatestConsumptions: (
@@ -137,6 +143,7 @@ const StockingStore = create<ProductState>((set) => ({
   productStockings: [],
   latestProductions: [],
   latestMotalities: [],
+  mortalities: [],
   latestConsumptions: [],
   loading: false,
   showStocking: false,
@@ -264,6 +271,19 @@ const StockingStore = create<ProductState>((set) => ({
       const data = response?.data
       if (data) {
         set({ latestMotalities: data.results })
+      }
+    } catch (error: unknown) {
+      console.log(error)
+    }
+  },
+  getMortalities: async (url) => {
+    try {
+      const response = await apiRequest<FetchResponse>(url, {
+        setLoading: StockingStore.getState().setLoading,
+      })
+      const data = response?.data
+      if (data) {
+        set({ mortalities: data.results, count: data.results.length })
       }
     } catch (error: unknown) {
       console.log(error)

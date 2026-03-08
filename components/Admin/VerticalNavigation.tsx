@@ -163,6 +163,7 @@ export default function VerticalNavigation() {
                 Operation
               </Link>
             </div>}
+            
             <div className="nav_dropdown">
               {(user && user?.staffRanking > 8 || user?.roles.includes("Daily Production")) && <Link
                 className="inner_nav_items"
@@ -178,7 +179,7 @@ export default function VerticalNavigation() {
               </Link>}
               {(user && user?.staffRanking > 8 || user?.roles.includes("Daily Mortality")) && <Link
                 className="inner_nav_items"
-                href="/admin/operations/consumptions"
+                href="/admin/operations/mortality"
               >
                 Daily Mortality
               </Link>}
@@ -203,7 +204,7 @@ export default function VerticalNavigation() {
             </div>}
             <div className="nav_dropdown">
               {(user && user?.staffRanking > 8) && <Link className="inner_nav_items" href="/admin/products">
-                Create Product
+                Product Records
               </Link>}
               {(user && user?.staffRanking > 8 || user?.roles.includes("Stocks")) && <Link className="inner_nav_items" href="/admin/products/stocks">
                 Stocks
@@ -332,7 +333,7 @@ export default function VerticalNavigation() {
             </div>
           </div>}
 
-          {user && user.roles.includes("Director") && <div className={`v_nav_items active two`}>
+          {user && (user.roles.includes("Director")||user.roles.includes("Manager")) && <div className={`v_nav_items active two`}>
             <div
               className={`hover:text-[var(--customRedColor)] flex cursor-pointer items-center py-3 ${pathname.includes('company')
                 ? 'text-[var(--customRedColor)]'
@@ -343,9 +344,9 @@ export default function VerticalNavigation() {
               Company
             </div>
             <div className="nav_dropdown">
-              <Link className="inner_nav_items" href="/admin/company">
+              {user.roles.includes("Director")&&<Link className="inner_nav_items" href="/admin/company">
                 Set Company
-              </Link>
+              </Link>}
               <Link className="inner_nav_items" href="/admin/company/staffs">
                 Staffs
               </Link>

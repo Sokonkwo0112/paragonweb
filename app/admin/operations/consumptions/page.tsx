@@ -77,7 +77,7 @@ const Consumptions: React.FC = () => {
                 <th>Age</th>
                 <th>Birds</th>
                 <th>Consumption</th>
-                <th>Feed</th>
+                <th>Consumed Product</th>
                 <th>Weight</th>
                 <th>Date</th>
                 <th>Remark</th>

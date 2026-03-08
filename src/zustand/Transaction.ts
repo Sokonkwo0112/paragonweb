@@ -41,6 +41,7 @@ export const ProductEmpty = {
   consumptionUnit: '',
   costPrice: 0,
   adjustedPrice: 0,
+  percentageProduction: 0,
   price: 0,
   cartUnits: 0,
   description: '',

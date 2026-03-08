@@ -41,6 +41,7 @@ export function ProductionCard() {
                         <tr className="text-left border-b border-b-[var(--border)]">
                             <th>Date</th>
                             <th>Total Eggs</th>
+                            <th>%</th>
                             <th className="text-right">Units</th>
                         </tr>
                     </thead>
@@ -54,6 +55,7 @@ export function ProductionCard() {
                                     {formatRelatedDate(item.createdAt)}
                                 </td>}
                                 <td>{item.name}</td>
+                                <td className="text-[var(--success)]">{item.percentageProduction ? `${(item.percentageProduction*100).toFixed(2)}%`: "N/A"}</td>
                                 <td className="text-right font-medium">
                                     {item.units}
                                 </td>
